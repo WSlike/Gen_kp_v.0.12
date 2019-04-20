@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<root>
+  <addData>
+    <data handleUnknown="implementation" name="http://www.3s-software.com/plcopenxml/method">
+      
+      <Method ObjectId="IEC104_Init" name="IEC104_Init">
+        
+        <interface/>
+        <body>
+          <ST>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml">//Настройки Slave IEC104</xhtml>
+          </ST>
+        </body>
+      </Method>
+    </data>
+  </addData>
+</root>
