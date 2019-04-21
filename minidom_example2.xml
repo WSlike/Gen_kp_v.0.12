@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://www.plcopen.org/xml/tc6_0200">
-  <fileHeader companyName="" creationDateTime="2019-04-21 16:48:21.395708" productName="CODESYS" productVersion="CODESYS V3.5 SP7 Patch 4"/>
-  <contentHeader modificationDateTime="2019-04-21 16:48:21.395708" name="kp15_20190419.project">
+  <fileHeader companyName="" creationDateTime="2019-04-21T17:15:19.935568" productName="CODESYS" productVersion="CODESYS V3.5 SP7 Patch 4"/>
+  <contentHeader modificationDateTime="2019-04-21T17:15:19.935568" name="kp15_20190419.project">
     <coordinateInfo>
       <fbd>
         <scaling x="1" y="1"/>
@@ -175,7 +175,96 @@
             </variable>
           </localVars>
         </interface>
+        <body>
+          <ST>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml">// Begin
+sys_tick := TICKS.GetTick(sys_tick_bool);
+current_time := CAA.TICK_TO_UDINT(sys_tick);
+SysTimeRtc.SysTimeRtcHighResGet(hiTime);
+
+CASE state OF
+	0:
+		////Настройка IEC104	//
+		POU.IEC104_Init();
+
+		////Работа с ТУ	//
+		POU.TU_Init();
+		
+		////Работа с ТС//
+		POU.TS_Init();
+		
+		////Работа с ТИ//		
+		POU.TI_Init();
+		
+		First_start := TRUE;				// Поднимаем флаг первого запуска	
+		state := 200;
+		
+	200:
+
+
+		////Первый запуск//			
+		Start_Timer( IN:=TRUE, PT:=T#5S ); // Запуск Таймера первого запуска
+
+		
+		////Запуск передачи данных IEC104//		
+		srv_104();
+		IF srv_104.error THEN
+			state := 1000;
+		END_IF
+		
+		/////Обработка и передача ТC
+		POU.TS_Work(); 
+		
+		/////Обработка и передача ТИ
+		POU.TI_Work();
+		
+		//// Индикация на шкафу
+		POU.Valve_Indication();
+		POU.Pump_Indication();
+		
+		///Обработка ТУ и ТР
+		POU.TU_TR_WORK();
+
+		
+		
+		ModbusMaster_SPort.enable := TRUE;	
+		ModbusMaster_SPort();
+		ModbusMaster_VPort.enable := TRUE;	
+		ModbusMaster_VPort();
+		
+		/////Сброс флага первого запуска
+		IF Start_Timer.Q THEN
+			First_start := FALSE;
+		END_IF
+		
+		state := 200;
+	
+	1000:
+		srv_104.reset();
+		state := 0;
+		
+END_CASE
+
+// End
+</xhtml>
+          </ST>
+        </body>
+        <addData>
+          <data handleUnknown="discard" name="http://www.3s-software.com/plcopenxml/objectid">
+            <ObjectId>34e67a95-9ebc-4ea2-996a-407f65a206fe</ObjectId>
+          </data>
+        </addData>
       </pou>
     </pous>
   </types>
+  <instances>
+    <configurations/>
+  </instances>
+  <addData>
+    <data handleUnknown="discard" name="http://www.3s-software.com/plcopenxml/projectstructure">
+      <ProjectStructure>
+        <Object Name="POU" ObjectId="34e67a95-9ebc-4ea2-996a-407f65a206fe"/>
+      </ProjectStructure>
+    </data>
+  </addData>
 </project>

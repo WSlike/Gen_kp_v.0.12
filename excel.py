@@ -1,5 +1,4 @@
 import openpyxl
-import xml.etree.ElementTree as ET
 
 wb = openpyxl.load_workbook(filename='Gen_Уренгой-Пур-Пэ_КП15.xlsx')
 
@@ -16,9 +15,3 @@ IEC_104 = {'ASDU': ws.cell(5, 1).value,
 
 print(ws.title)
 print(IEC_104)
-
-a = ET.Element('a')
-b = ET.SubElement(a, 'b')
-c = ET.SubElement(a, 'c')
-d = ET.SubElement(c, 'd')
-ET.dump(a)

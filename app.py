@@ -75,8 +75,10 @@ create_var(localVars, var_name='Start_timer', var_type='TON', derived=True, comm
 create_var(localVars, var_name='First_start', var_type='BOOL ', comment=' Флаг первого запуска')
 
 body = create_tag('body')
+pou.appendChild(body)
 ST = create_tag('ST')
-xhtml = create_tag('xhtml', attributes={'xmlns': 'http://www.w3.org/1999/xhtml'})
+body.appendChild(ST)
+
 ST_code = '''// Begin
 sys_tick := TICKS.GetTick(sys_tick_bool);
 current_time := CAA.TICK_TO_UDINT(sys_tick);
@@ -145,7 +147,32 @@ CASE state OF
 		
 END_CASE
 
-// End'''
+// End\n'''
+
+xhtml = create_tag('xhtml', text=ST_code, attributes={'xmlns': 'http://www.w3.org/1999/xhtml'})
+ST.appendChild(xhtml)
+
+addData_ObjectId = create_tag('addData')
+pou.appendChild(addData_ObjectId)
+data_ObjectId = create_tag('data', attributes={'name': 'http://www.3s-software.com/plcopenxml/objectid',
+                                               'handleUnknown': 'discard'})
+addData_ObjectId.appendChild(data_ObjectId)
+ObjectId = create_tag('ObjectId', text='34e67a95-9ebc-4ea2-996a-407f65a206fe')
+data_ObjectId.appendChild(ObjectId)
+
+instances = create_tag('instances')
+project.appendChild(instances)
+configurations = create_tag('configurations')
+instances.appendChild(configurations)
+addData_ProjectStructure = create_tag('addData')
+project.appendChild(addData_ProjectStructure)
+data_ProjectStructure = create_tag('data', attributes={'name': 'http://www.3s-software.com/plcopenxml/projectstructure',
+                                                       'handleUnknown': 'discard'})
+addData_ProjectStructure.appendChild(data_ProjectStructure)
+ProjectStructure = create_tag('ProjectStructure')
+data_ProjectStructure.appendChild(ProjectStructure)
+Object = create_tag('Object', attributes={'Name': 'POU', 'ObjectId': '34e67a95-9ebc-4ea2-996a-407f65a206fe'})
+ProjectStructure.appendChild(Object)
 
 xml_str = doc.toprettyxml(indent="  ", encoding='utf-8')
 with open("minidom_example2.xml", "wb") as f:
