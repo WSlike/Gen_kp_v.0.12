@@ -1,4 +1,4 @@
-
+"""\\\\\\\\\\\\\\\РАБОТА С ТАБЛИЦЕЙ\\\\\\\\\\\\\\\\"""
 import openpyxl
 import os
 from openpyxl.styles import PatternFill, Border, Side, Alignment
