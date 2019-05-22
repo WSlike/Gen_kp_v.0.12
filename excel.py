@@ -1,6 +1,8 @@
+
 import openpyxl
-from openpyxl.styles import PatternFill, Border, Side, Alignment
 import os
+from openpyxl.styles import PatternFill, Border, Side, Alignment
+
 
 """================Заполняем настройки================="""
 
