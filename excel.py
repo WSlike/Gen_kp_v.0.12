@@ -2,14 +2,15 @@
 import openpyxl
 import os
 from openpyxl.styles import PatternFill, Border, Side, Alignment
+from datetime import datetime
 
 
 """================Заполняем настройки================="""
 
 # Открываем файл excel
 print('Открываем файл...')
-filename = 'pr_gen.xlsx'
-wb = openpyxl.load_workbook(filename=filename)
+filename = 'pr_gen'
+wb = openpyxl.load_workbook(filename=filename + '.xlsx')
 
 print('Читаем Количесвто сигналов и Настройки протокола...')
 # Считаем количество ТС
@@ -433,8 +434,20 @@ for k in range(2):
         cell.value = '-'
 
 print('База готова')
-wb.save(filename=filename)
+
+wb.save(filename=filename + '.xlsx')
+wb.template = False
 wb.close()
 print('Файл сохранен')
+os.system(filename + '.xlsx')
 
-os.system(filename)
+""" заготовка под сохранение с текущей датой и временем
+date = datetime.now().timetuple()
+new_filename = filename + '_' + str(date.tm_year) + '.' + str(date.tm_mon) + '.' + str(date.tm_mday) + '_' + \
+               str(date.tm_hour) + '-' + str(date.tm_min) + '-' + str(date.tm_sec)
+print(new_filename)
+wb.save(filename=new_filename + '.xlsx')
+wb.close()
+print('Файл сохранен')
+os.system(new_filename)
+"""
