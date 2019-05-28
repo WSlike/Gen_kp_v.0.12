@@ -4,9 +4,92 @@ import settings
 import devices
 import os
 from openpyxl.styles import PatternFill, Border, Side, Alignment
+from openpyxl.comments import Comment
 from datetime import datetime
 
 
+def fill_ts():
+    ts = wb.worksheets[1]
+
+    # №
+    fill = PatternFill(fill_type='solid', start_color='9bc2e6', end_color='9bc2e6')
+    bord_side = Side(border_style='thin', color='00000000')
+    bord = Border(bottom=bord_side, left=bord_side, top=bord_side, right=bord_side)
+    align = Alignment(horizontal='center', vertical='center', wrap_text=True)
+    for i in range(settings.discrete_count):
+        cell = bd.cell(index + i, 1)
+        cell.fill = fill
+        cell.border = bord
+        cell.alignment = align
+        cell.value = ts.cell(6 + i, 2).value
+
+    # Наименование логического параметра
+    align = Alignment(horizontal='left', vertical='center', wrap_text=True)
+    for i in range(settings.discrete_count):
+        cell = bd.cell(index + i, 2)
+        cell.fill = fill
+        cell.border = bord
+        cell.alignment = align
+        cell.value = ts.cell(6 + i, 3).value
+
+    # Тип параметра
+    align = Alignment(horizontal='center', vertical='center', wrap_text=True)
+    for i in range(settings.discrete_count):
+        cell = bd.cell(index + i, 3)
+        cell.fill = fill
+        cell.border = bord
+        cell.alignment = align
+        cell.value = 'физический'
+
+    # Функция ASDU
+    for i in range(settings.discrete_count):
+        cell = bd.cell(index + i, 4)
+        cell.fill = fill
+        cell.border = bord
+        cell.alignment = align
+        cell.value = 'M_SP_NA_1 (1)'
+
+    # Адрес объекта
+    for i in range(settings.discrete_count):
+        cell = bd.cell(index + i, 5)
+        cell.fill = fill
+        cell.border = bord
+        cell.alignment = align
+        cell.value = settings.IEC_104['startAddressTS'] + i
+
+    # Нижний диапазон, Верхний диапазон, Ед. измерения, Значение по умолчанию (для ТР)
+    for k in range(4):
+        for i in range(settings.discrete_count):
+            cell = bd.cell(index + i, 6 + k)
+            cell.fill = fill
+            cell.border = bord
+            cell.alignment = align
+            cell.value = '-'
+
+    # Расшифровка значения
+    for i in range(settings.discrete_count):
+        cell = bd.cell(index + i, 10)
+        cell.fill = fill
+        cell.border = bord
+        cell.alignment = align
+        cell.value = ts.cell(6 + i, 13).value
+
+    # № физического канала
+    for i in range(settings.discrete_count):
+        cell = bd.cell(index + i, 11)
+        cell.fill = fill
+        cell.border = bord
+        cell.alignment = align
+        cell.value = str(ts.cell(6 + i, 4).value) + "." + str(ts.cell(6 + i, 5).value)
+
+    # Примечание,
+    for k in range(2):
+        for i in range(settings.discrete_count):
+            cell = bd.cell(index + i, 12 + k)
+            cell.fill = fill
+            cell.border = bord
+            cell.alignment = align
+            cell.value = '-'
 """================Заполняем БД ВУ================="""
 # Открываем файл excel
 print('================Заполняем БД ВУ=================')
@@ -15,6 +98,18 @@ wb = openpyxl.load_workbook(filename=filename + '.xlsx')
 
 bd = wb.worksheets[8]
 
+# очищаем базу
+clr = bd['A9:M500']
+fill = PatternFill()
+bord_side = Side()
+bord = Border()
+align = Alignment()
+for row in clr:
+    for cell in row:
+        cell.fill = fill
+        cell.border = bord
+        cell.alignment = align
+        cell.value = None
 """==Заголовки=="""
 
 print(' Заголовки')
@@ -30,89 +125,9 @@ extra2 = 'k=' + str(settings.IEC_104['k']) + ', ' + 'w=' + str(settings.IEC_104[
 bd['L5'] = extra2
 
 """==Физические ТС=="""
-
-print(' Физические ТС')
-ts = wb.worksheets[1]
 index = 9
-# №
-fill = PatternFill(fill_type='solid', start_color='9bc2e6', end_color='9bc2e6')
-bord_side = Side(border_style='thin', color='00000000')
-bord = Border(bottom=bord_side, left=bord_side, top=bord_side, right=bord_side)
-align = Alignment(horizontal='center', vertical='center', wrap_text=True)
-for i in range(settings.discrete_count):
-    cell = bd.cell(index+i, 1)
-    cell.fill = fill
-    cell.border = bord
-    cell.alignment = align
-    cell.value = ts.cell(6+i, 2).value
-
-# Наименование логического параметра
-align = Alignment(horizontal='left', vertical='center', wrap_text=True)
-for i in range(settings.discrete_count):
-    cell = bd.cell(index+i, 2)
-    cell.fill = fill
-    cell.border = bord
-    cell.alignment = align
-    cell.value = ts.cell(6+i, 3).value
-
-# Тип параметра
-align = Alignment(horizontal='center', vertical='center', wrap_text=True)
-for i in range(settings.discrete_count):
-    cell = bd.cell(index+i, 3)
-    cell.fill = fill
-    cell.border = bord
-    cell.alignment = align
-    cell.value = 'физический'
-
-# Функция ASDU
-for i in range(settings.discrete_count):
-    cell = bd.cell(index+i, 4)
-    cell.fill = fill
-    cell.border = bord
-    cell.alignment = align
-    cell.value = 'M_SP_NA_1 (1)'
-
-# Адрес объекта
-for i in range(settings.discrete_count):
-    cell = bd.cell(index+i, 5)
-    cell.fill = fill
-    cell.border = bord
-    cell.alignment = align
-    cell.value = settings.IEC_104['startAddressTS'] + i
-
-# Нижний диапазон, Верхний диапазон, Ед. измерения, Значение по умолчанию (для ТР)
-for k in range(4):
-    for i in range(settings.discrete_count):
-        cell = bd.cell(index+i, 6+k)
-        cell.fill = fill
-        cell.border = bord
-        cell.alignment = align
-        cell.value = '-'
-
-# Расшифровка значения
-for i in range(settings.discrete_count):
-    cell = bd.cell(index + i, 10)
-    cell.fill = fill
-    cell.border = bord
-    cell.alignment = align
-    cell.value = ts.cell(6+i, 13).value
-
-# № физического канала
-for i in range(settings.discrete_count):
-    cell = bd.cell(index+i, 11)
-    cell.fill = fill
-    cell.border = bord
-    cell.alignment = align
-    cell.value = str(ts.cell(6+i, 4).value) + "." + str(ts.cell(6+i, 5).value)
-
-# Примечание,
-for k in range(2):
-    for i in range(settings.discrete_count):
-        cell = bd.cell(index+i, 12+k)
-        cell.fill = fill
-        cell.border = bord
-        cell.alignment = align
-        cell.value = '-'
+print(' Физические ТС')
+fill_ts()
 
 
 """==Физические ТИ=="""
@@ -208,7 +223,7 @@ for i in range(settings.input_count):
     cell.fill = fill
     cell.border = bord
     cell.alignment = align
-    cell.value = str(ti.cell(6+i, 4).value) + "." + str(ts.cell(6+i, 5).value)
+    cell.value = str(ti.cell(6+i, 4).value) + "." + str(ti.cell(6+i, 5).value)
 
 # Примечание
 for k in range(2):
@@ -383,6 +398,83 @@ for k in range(2):
         cell.alignment = align
         cell.value = '-'
 
+
+"""==Интерфейсные ТС=="""
+index = index + settings.output_count
+# №
+fill = PatternFill(fill_type='solid', start_color='9bc2e6', end_color='9bc2e6')
+bord_side = Side(border_style='thin', color='00000000')
+bord = Border(bottom=bord_side, left=bord_side, top=bord_side, right=bord_side)
+align = Alignment(horizontal='center', vertical='center', wrap_text=True)
+ind_ts = 1
+for i in range(len(devices.Modbus)):
+    for j in range(len(devices.Modbus[i])):
+        transaction = devices.Modbus[i][j]
+        if transaction.mfc == 1 or transaction.mfc == 2:
+            for k in range(transaction.len_tr):
+                # №
+                cell = bd.cell(index + k, 1)
+                cell.fill = fill
+                cell.border = bord
+                cell.alignment = align
+                cell.value = ind_ts
+
+                # Наименование логического параметра
+                align = Alignment(horizontal='left', vertical='center', wrap_text=True)
+                cell = bd.cell(index + k, 2)
+                cell.fill = fill
+                cell.border = bord
+                cell.alignment = align
+                cell.value = transaction.name + ' ТС №' + str(k+1)
+
+
+                # # Тип параметра
+                # align = Alignment(horizontal='center', vertical='center', wrap_text=True)
+                # cell = bd.cell(index + i, 3)
+                # cell.fill = fill
+                # cell.border = bord
+                # cell.alignment = align
+                # cell.value = 'физический'
+                #
+                # # Функция ASDU
+                # cell = bd.cell(index + i, 4)
+                # cell.fill = fill
+                # cell.border = bord
+                # cell.alignment = align
+                # cell.value = 'C_SE_NC_1 (50)'
+                #
+                # # Адрес объекта
+                # cell = bd.cell(index + i, 5)
+                # cell.fill = fill
+                # cell.border = bord
+                # cell.alignment = align
+                # cell.value = settings.IEC_104['startAddressTRF'] + i
+                #
+                # # Нижний диапазон, Верхний диапазон, Ед. измерения, Значение по умолчанию (для ТР), Расшифровка значения
+                # for k in range(5):
+                #     cell = bd.cell(index + i, 6 + k)
+                #     cell.fill = fill
+                #     cell.border = bord
+                #     cell.alignment = align
+                #     cell.value = '-'
+                #
+                # # № физического канала
+                # cell = bd.cell(index + i, 11)
+                # cell.fill = fill
+                # cell.border = bord
+                # cell.alignment = align
+                # cell.value = str(tr.cell(6 + i, 4).value) + "." + str(tr.cell(6 + i, 5).value)
+                #
+                # # Примечание,
+                # for k in range(2):
+                #     cell = bd.cell(index + i, 12 + k)
+                #     cell.fill = fill
+                #     cell.border = bord
+                #     cell.alignment = align
+                #     cell.value = '-'
+                ind_ts += 1
+
+            index += transaction.len_tr
 print('База готова')
 
 wb.save(filename=filename + '.xlsx')
