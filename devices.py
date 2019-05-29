@@ -29,7 +29,6 @@ for i in range(4, ws.max_row):
 dev_row.append(ws.max_row + 2)
 
 print('Используемые устройства:')
-print(dev)
 for key in dev:
     print(' ' + key)
 
@@ -62,7 +61,7 @@ for i in range(len(dev_row) - 1):
 for i in range(len(Modbus)):
     for j in range(len(Modbus[i])):
         transaction = Modbus[i][j]
-        print('\tЗапрос =', j, '\tФункция =', transaction.mfc, '\tсмещение =', transaction.offset,
-              '\tкол-во регистров =', transaction.len_tr, '\tтаймаут запроса =', transaction.timeout)
+        #print('\tЗапрос =', j, '\tФункция =', transaction.mfc, '\tсмещение =', transaction.offset,
+        #     '\tкол-во регистров =', transaction.len_tr, '\tтаймаут запроса =', transaction.timeout)
 
 wb.close()
