@@ -262,8 +262,10 @@ for i in range(len(devices.Modbus)):
                 ind_tr += 1
 
             index += transaction.len_tr
+
 print('База готова')
 
+"""==Сохраняем базу=="""
 wb.save(filename=filename + '.xlsx')
 wb.template = False
 wb.close()
