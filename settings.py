@@ -1,11 +1,24 @@
 import openpyxl
+import openfile
+from transliterate import translit
+from datetime import timedelta
+
+utc3 = timedelta(hours=3)   # часовой пояс +3 часа
 
 """================Читаем настройки================="""
 # Открываем файл excel
 print(' Открываем файл...')
+filename = openfile.filename
 print('================Читаем настройки=================')
-filename = 'pr_gen'
-wb = openpyxl.load_workbook(filename=filename + '.xlsx')
+
+filename = filename
+wb = openpyxl.load_workbook(filename=filename)
+
+# Когда и кто последний раз редактировал дркумент
+date_modified = (wb.properties.modified + utc3).strftime("%Y%m%d_%H%M")
+lastModifiedBy = wb.properties.lastModifiedBy
+save_name = 'pr_gen_' + date_modified + '_' + translit(lastModifiedBy, reversed=True).replace(' ', '_') + '.xlsx'
+print(save_name)
 
 print(' Читаем Количесвто сигналов и Настройки протокола...')
 # Считаем количество ТС

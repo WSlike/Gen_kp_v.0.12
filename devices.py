@@ -1,21 +1,22 @@
 import openpyxl
-from openpyxl.styles import PatternFill, Border, Side, Alignment
+import openfile
 
 
 class Transaction:
 
-    def __init__(self, name=None, mfc=None, offset=None, len_tr=None, timeout=None):
+    def __init__(self, name=None, mfc=None, offset=None, col=None, len_tr=None, timeout=None):
         self.name = name
         self.mfc = mfc
         self.offset = offset
+        self.col = col
         self.len_tr = len_tr
         self.timeout = timeout
 
 
 # Открываем файл excel
 print('=======Читаем настройки внешних устройств========')
-filename = 'pr_gen'
-wb = openpyxl.load_workbook(filename=filename + '.xlsx')
+filename = openfile.filename
+wb = openpyxl.load_workbook(filename=openfile.filename)
 
 ws = wb.worksheets[7]
 dev = {}  # список {Название устройства: Код устройства}
@@ -52,7 +53,7 @@ for i in range(len(dev_row) - 1):
             len_tr = col * 2  # количесвто регистров
         else:
             len_tr = col  # количесвто регистров
-        t = Transaction(name=ws.cell(dev_row[i], 4).value, mfc=mfc, offset=offset, len_tr=len_tr, timeout=timeout)
+        t = Transaction(name=ws.cell(dev_row[i], 4).value, mfc=mfc, offset=offset, col=col, len_tr=len_tr, timeout=timeout)
         Device.append(t)
         index_tr += 1
 
@@ -61,7 +62,7 @@ for i in range(len(dev_row) - 1):
 for i in range(len(Modbus)):
     for j in range(len(Modbus[i])):
         transaction = Modbus[i][j]
-        #print('\tЗапрос =', j, '\tФункция =', transaction.mfc, '\tсмещение =', transaction.offset,
+        # print('\tЗапрос =', j, '\tФункция =', transaction.mfc, '\tсмещение =', transaction.offset,
         #     '\tкол-во регистров =', transaction.len_tr, '\tтаймаут запроса =', transaction.timeout)
 
 wb.close()
