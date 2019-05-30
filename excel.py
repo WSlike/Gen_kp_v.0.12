@@ -7,6 +7,7 @@ import openfile
 from openpyxl.styles import PatternFill, Border, Side, Alignment
 
 
+
 def fill_row(signal_type='ТС', row=0, num='-', name='-', parameter_type='-', func='-', address='-',
              ai_min='-', ai_max='-', unit='-', description='-', channel='-', comment='-'):
     """Заполнение одной строки базы данных"""
