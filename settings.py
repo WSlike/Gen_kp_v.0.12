@@ -1,18 +1,9 @@
 from openfile import wb, f_open
-from transliterate import translit
-from datetime import timedelta
 
-
-utc3 = timedelta(hours=3)   # часовой пояс +3 часа
 
 
 if f_open:
     print('===Читаем Количесвто сигналов и Настройки протокола===')
-
-    # Когда и кто последний раз редактировал дркумент
-    date_modified = (wb.properties.modified + utc3).strftime("%Y%m%d_%H%M")
-    lastModifiedBy = wb.properties.lastModifiedBy
-    save_name = 'pr_gen_' + date_modified + '_' + translit(lastModifiedBy, reversed=True).replace(' ', '_') + '.xlsx'
 
     print(' Читаем Количесвто сигналов и Настройки протокола...')
     # Считаем количество ТС

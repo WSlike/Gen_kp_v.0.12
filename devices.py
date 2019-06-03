@@ -12,20 +12,19 @@ class Transaction:
         self.timeout = timeout
 
 
-
 if f_open:
     print('==========Читаем таблицу внешних устройств============')
 
-    ws = wb.worksheets[7]
+    ws_dev = wb.worksheets[7]
     dev = {}  # список {Название устройства: Код устройства}
     j = 0
     dev_row = []  # массив с начальными строками устройств
-    for i in range(4, ws.max_row):
-        dev_key = ws.cell(i, 4).value
+    for i in range(4, ws_dev.max_row):
+        dev_key = ws_dev.cell(i, 4).value
         if dev_key not in dev and (dev_key is not None) and (dev_key != 'Название устройства'):
-            dev[dev_key] = ws.cell(i, 3).value
+            dev[dev_key] = ws_dev.cell(i, 3).value
             dev_row.append(i)
-    dev_row.append(ws.max_row + 2)
+    dev_row.append(ws_dev.max_row + 2)
 
     print('Используемые устройства:')
     for key in dev:
@@ -41,17 +40,17 @@ if f_open:
         index_tr = 0
 
         for j in range(first, last+1):
-            dev_mfc = ws.cell(j, 6).value  # функция
-            dev_offset = ws.cell(j, 7).value  # смещение
-            reg_type = ws.cell(j, 8).value  # тип данных
-            dev_col = ws.cell(j, 9).value  # количество данных
-            dev_timeout = ws.cell(j, 10).value  # таймаут опроса
+            dev_mfc = ws_dev.cell(j, 6).value  # функция
+            dev_offset = ws_dev.cell(j, 7).value  # смещение
+            reg_type = ws_dev.cell(j, 8).value  # тип данных
+            dev_col = ws_dev.cell(j, 9).value  # количество данных
+            dev_timeout = ws_dev.cell(j, 10).value  # таймаут опроса
 
             if reg_type == 'float' or reg_type == 'long':
                 dev_len_tr = dev_col * 2  # количесвто регистров
             else:
                 dev_len_tr = dev_col  # количесвто регистров
-            t = Transaction(name=ws.cell(dev_row[i], 4).value, mfc=dev_mfc, offset=dev_offset, col=dev_col,
+            t = Transaction(name=ws_dev.cell(dev_row[i], 4).value, mfc=dev_mfc, offset=dev_offset, col=dev_col,
                             len_tr=dev_len_tr, timeout=dev_timeout)
             Device.append(t)
             index_tr += 1
