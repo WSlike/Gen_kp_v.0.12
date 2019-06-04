@@ -4,6 +4,7 @@ import os
 from openpyxl.styles import PatternFill, Border, Side, Alignment
 # Импорт внутренних файлов
 from openfile import wb, f_open, save_name
+from tkinter import messagebox
 import settings
 import devices
 
@@ -324,8 +325,14 @@ if f_open:
     print('База готова')
 
     """==Сохраняем базу=="""
+    wb.active = 8
     wb.save(filename=save_name)
     print('Файл сохранен')
+    messagebox.showinfo("Генератор",
+                        "Генерирование БД ВУ завершено!\n"
+                        "Сейчас откроется файл:\n" +
+                        save_name
+                        )
 
     os.system(save_name)
 print("--- %s seconds ---" % (time.time() - start_time))

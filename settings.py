@@ -1,7 +1,5 @@
 from openfile import wb, f_open
 
-
-
 if f_open:
     print('===Читаем Количесвто сигналов и Настройки протокола===')
 
