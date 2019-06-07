@@ -31,8 +31,8 @@ if f_open:
         print(' ' + key)
 
     # Заполнение массива транзакций
-    Modbus = []
-    Device = []
+    Modbus = []     # Массив всех устройств
+    Device = []     # Массив транзакций отдельного устойства
     for i in range(len(dev_row) - 1):
         first = dev_row[i] + 5
         last = dev_row[i + 1] - 2
@@ -45,12 +45,12 @@ if f_open:
             reg_type = ws_dev.cell(j, 8).value  # тип данных
             dev_col = ws_dev.cell(j, 9).value  # количество данных
             dev_timeout = ws_dev.cell(j, 10).value  # таймаут опроса
-
+            dev_name = ws_dev.cell(dev_row[i], 4).value     # название устройства
             if reg_type == 'float' or reg_type == 'long':
                 dev_len_tr = dev_col * 2  # количесвто регистров
             else:
                 dev_len_tr = dev_col  # количесвто регистров
-            t = Transaction(name=ws_dev.cell(dev_row[i], 4).value, mfc=dev_mfc, offset=dev_offset, col=dev_col,
+            t = Transaction(name=dev_name, mfc=dev_mfc, offset=dev_offset, col=dev_col,
                             len_tr=dev_len_tr, timeout=dev_timeout)
             Device.append(t)
             index_tr += 1
@@ -60,5 +60,3 @@ if f_open:
     for i in range(len(Modbus)):
         for j in range(len(Modbus[i])):
             transaction = Modbus[i][j]
-            # print('\tЗапрос =', j, '\tФункция =', transaction.mfc, '\tсмещение =', transaction.offset,
-            #     '\tкол-во регистров =', transaction.len_tr, '\tтаймаут запроса =', transaction.timeout)
